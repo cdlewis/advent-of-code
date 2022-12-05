@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/cdlewis/advent-of-code/util"
 )
 
 func calculateScore(item rune) int {
@@ -15,23 +17,6 @@ func calculateScore(item rune) int {
 	return int(i - 'A' + 27)
 }
 
-func keyIntersection(maps []map[rune]bool) rune {
-	keyCounts := map[rune]int{}
-	for _, inputMap := range maps {
-		for key := range inputMap {
-			keyCounts[key]++
-		}
-	}
-
-	for key, count := range keyCounts {
-		if count == len(maps) {
-			return key
-		}
-	}
-
-	panic("no key found")
-}
-
 func main() {
 	dat, _ := os.ReadFile("./input")
 
@@ -39,21 +24,8 @@ func main() {
 	total := 0
 
 	for i := 0; i < len(raw); i += 3 {
-		seenItemsPerBackpack := make([]map[rune]bool, 3)
-
-		for j := i; j < i+3; j++ {
-			backpack := raw[j]
-
-			for _, item := range backpack {
-				if seenItemsPerBackpack[j-i] == nil {
-					seenItemsPerBackpack[j-i] = map[rune]bool{}
-				}
-				seenItemsPerBackpack[j-i][item] = true
-			}
-		}
-
-		item := keyIntersection(seenItemsPerBackpack)
-		result := calculateScore(item)
+		item := util.IntersectionString(raw[i : i+3]...)
+		result := calculateScore(rune(item[0]))
 
 		total += result
 	}
