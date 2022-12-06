@@ -29,8 +29,7 @@ func main() {
 		from := util.ToInt(tokens[3]) - 1
 		to := util.ToInt(tokens[5]) - 1
 
-		curr := stacks[from][len(stacks[from])-count:]
-		stacks[from] = stacks[from][:len(stacks[from])-count]
+		curr := util.Pops(&stacks[from], count)
 		stacks[to] = append(stacks[to], curr...)
 	}
 
