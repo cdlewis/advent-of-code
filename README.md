@@ -1,3 +1,5 @@
+# Advent of Code
+
 <!--- advent_readme_stars table --->
 ## 2022 Results
 
