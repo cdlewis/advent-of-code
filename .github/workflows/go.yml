@@ -24,5 +24,8 @@ jobs:
     - name: Build
       run: go build -v ./...
 
+    - name: Create session file
+      run: echo "${{ secrets.AOC_SESSION }}" > session_id
+
     - name: Test
       run: go test -v ./...
