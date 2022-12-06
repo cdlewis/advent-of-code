@@ -3,15 +3,34 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
-
-	"github.com/cdlewis/advent-of-code/util"
 )
 
 func main() {
 	dat, _ := os.ReadFile("./input")
-	raw := strings.Split(string(dat), "\n")
-	util.Flatten([][]int{})
+	raw := string(dat)
+	windowSize := 14
 
-	fmt.Println(raw)
+	seen := map[byte]int{}
+	for i := 0; i < len(raw); i++ {
+		seen[raw[i]]++
+
+		if i >= windowSize {
+			seen[raw[i-windowSize]]--
+		}
+
+		isUnique := true
+		for _, v := range seen {
+			if v > 1 {
+				isUnique = false
+				break
+			}
+		}
+
+		if i >= windowSize && isUnique {
+			fmt.Println("Found", i+1)
+			return
+		}
+	}
+
+	panic("Nothing found")
 }
