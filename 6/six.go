@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/cdlewis/advent-of-code/util"
 )
 
 func main() {
-	dat, _ := os.ReadFile("./input")
-	raw := string(dat)
+	raw := util.GetInput(6, true, "mjqjpqmgbljsphdztnvjfqwrcgsmlb")
 	windowSize := 14
 
 	seen := map[byte]int{}

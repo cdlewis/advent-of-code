@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/cdlewis/advent-of-code/util"
 )
 
 func parsePairs(input string) [][]int {
@@ -29,8 +30,7 @@ func overlaps(one []int, two []int) bool {
 }
 
 func main() {
-	dat, _ := os.ReadFile("./input")
-	raw := strings.Split(string(dat), "\n")
+	raw := strings.Split(util.GetInput(4, false, ""), "\n")
 
 	result := 0
 

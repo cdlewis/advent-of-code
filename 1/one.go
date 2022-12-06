@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/cdlewis/advent-of-code/util"
 )
 
 func main() {
-	dat, _ := os.ReadFile("./input")
-	raw := strings.Split(string(dat), "\n")
+	raw := strings.Split(util.GetInput(1, false, ""), "\n")
 
 	current := 0
 	results := []int{}

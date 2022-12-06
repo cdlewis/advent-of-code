@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
+
+	"github.com/cdlewis/advent-of-code/util"
 )
 
 const LOSE = 0
@@ -23,9 +24,7 @@ var outcomesMatrix = [][]int{
 }
 
 func main() {
-	dat, _ := os.ReadFile("./input")
-
-	raw := strings.Split(string(dat), "\n")
+	raw := strings.Split(util.GetInput(2, false, ""), "\n")
 
 	score := 0
 

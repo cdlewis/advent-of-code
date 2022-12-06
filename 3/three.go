@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/cdlewis/advent-of-code/util"
@@ -18,9 +17,7 @@ func calculateScore(item rune) int {
 }
 
 func main() {
-	dat, _ := os.ReadFile("./input")
-
-	raw := strings.Split(string(dat), "\n")
+	raw := strings.Split(util.GetInput(3, false, ""), "\n")
 	total := 0
 
 	for i := 0; i < len(raw); i += 3 {
