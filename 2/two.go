@@ -1,7 +1,6 @@
-package main
+package two
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/cdlewis/advent-of-code/util"
@@ -23,7 +22,7 @@ var outcomesMatrix = [][]int{
 	{LOSE, WIN, DRAW}, // SCISSORS
 }
 
-func main() {
+func Two() int {
 	raw := strings.Split(util.GetInput(2, false, ""), "\n")
 
 	score := 0
@@ -46,9 +45,5 @@ func main() {
 		score += (reward[desiredOutcome] + myMove + 1)
 	}
 
-	fmt.Println(score)
-
-	if score != 9541 {
-		panic("incorrect score")
-	}
+	return score
 }

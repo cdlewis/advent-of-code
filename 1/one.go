@@ -1,7 +1,6 @@
-package main
+package one
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -9,7 +8,7 @@ import (
 	"github.com/cdlewis/advent-of-code/util"
 )
 
-func main() {
+func One() int {
 	raw := strings.Split(util.GetInput(1, false, ""), "\n")
 
 	current := 0
@@ -32,9 +31,5 @@ func main() {
 
 	result := results[last] + results[last-1] + results[last-2]
 
-	fmt.Println(result)
-
-	if result != 205615 {
-		panic("unexpected result")
-	}
+	return result
 }

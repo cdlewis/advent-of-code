@@ -1,4 +1,4 @@
-package main
+package six
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"github.com/cdlewis/advent-of-code/util"
 )
 
-func main() {
-	raw := util.GetInput(6, true, "mjqjpqmgbljsphdztnvjfqwrcgsmlb")
+func Six(useFallback bool, fallback string) int {
+	raw := util.GetInput(6, useFallback, fallback)
 	windowSize := 14
 
 	seen := map[byte]int{}
@@ -28,7 +28,7 @@ func main() {
 
 		if i >= windowSize && isUnique {
 			fmt.Println("Found", i+1)
-			return
+			return i+1
 		}
 	}
 

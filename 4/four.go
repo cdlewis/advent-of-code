@@ -1,7 +1,6 @@
-package main
+package four
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -29,7 +28,7 @@ func overlaps(one []int, two []int) bool {
 	return (one[0] >= two[0] && one[0] <= two[1]) || (one[1] >= two[0] && one[1] <= two[1])
 }
 
-func main() {
+func Four() int {
 	raw := strings.Split(util.GetInput(4, false, ""), "\n")
 
 	result := 0
@@ -41,9 +40,5 @@ func main() {
 		}
 	}
 
-	fmt.Println(result)
-
-	if result != 905 {
-		panic("unexpected result")
-	}
+	return result
 }

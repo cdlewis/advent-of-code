@@ -1,7 +1,6 @@
-package main
+package three
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/cdlewis/advent-of-code/util"
@@ -16,7 +15,7 @@ func calculateScore(item rune) int {
 	return int(i - 'A' + 27)
 }
 
-func main() {
+func Three() int {
 	raw := strings.Split(util.GetInput(3, false, ""), "\n")
 	total := 0
 
@@ -27,9 +26,5 @@ func main() {
 		total += result
 	}
 
-	if total != 2650 {
-		panic("Incorrect answer")
-	}
-
-	fmt.Println("Total", total)
+	return total
 }

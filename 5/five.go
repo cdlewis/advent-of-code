@@ -1,14 +1,13 @@
-package main
+package five
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
 	"github.com/cdlewis/advent-of-code/util"
 )
 
-func main() {
+func Five() string {
 	dat, _ := os.ReadFile("./input")
 	instructions := strings.Split(string(dat), "\n")
 	stacks := util.Map([]string{
@@ -33,11 +32,5 @@ func main() {
 		stacks[to] = append(stacks[to], curr...)
 	}
 
-	result := string(util.Map(stacks, func(s []byte) byte { return s[len(s)-1] }))
-
-	fmt.Println(result)
-
-	if result != "GSLCMFBRP" {
-		panic("Unexpected result")
-	}
+	return string(util.Map(stacks, func(s []byte) byte { return s[len(s)-1] }))
 }
