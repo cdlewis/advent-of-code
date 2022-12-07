@@ -30,9 +30,11 @@ func Seven(useExample bool, example string) int {
 	currentDirectory := root
 
 	for _, line := range strings.Split(raw, "\n") {
-		if line[0] == '$' {
-			if string(line[:4]) == "$ cd" {
-				newPath := string(line[5:])
+		tokens := strings.Split(line, " ")
+
+		if tokens[0] == "$" {
+			if tokens[1] == "cd" {
+				newPath := string(tokens[2])
 
 				if newPath == "/" {
 					currentDirectory = root
@@ -48,37 +50,19 @@ func Seven(useExample bool, example string) int {
 			continue
 		}
 
-		parts := strings.Split(line, " ")
-
-		if parts[0] == "dir" {
-			if currentDirectory.Directories[parts[1]] == nil {
-				currentDirectory.Directories[parts[1]] = NewDirectory(parts[1], currentDirectory)
+		if tokens[0] == "dir" {
+			if currentDirectory.Directories[tokens[1]] == nil {
+				currentDirectory.Directories[tokens[1]] = NewDirectory(tokens[1], currentDirectory)
 			}
+
+			// Don't overwrite a directory if it has already been stored
 		} else {
-			currentDirectory.Files[parts[1]] = util.ToInt(parts[0])
+			currentDirectory.Files[tokens[1]] = util.ToInt(tokens[0])
 		}
 	}
 
 	directorySizeCache := map[*Directory]int{}
-
-	// Recursively calculate directory sizes
-	var calculateDirectorySize func(current *Directory) int
-	calculateDirectorySize = func(current *Directory) int {
-		totalSize := 0
-
-		for _, fileSize := range current.Files {
-			totalSize += fileSize
-		}
-
-		for _, directoryPtr := range current.Directories {
-			totalSize += calculateDirectorySize(directoryPtr)
-		}
-
-		directorySizeCache[current] = totalSize
-
-		return totalSize
-	}
-	directorySizeCache[root] = calculateDirectorySize(root)
+	directorySizeCache[root] = calculateDirectorySize(root, directorySizeCache)
 
 	currentFree := 70000000 - directorySizeCache[root]
 	spaceNeeded := 30000000 - currentFree
@@ -93,4 +77,20 @@ func Seven(useExample bool, example string) int {
 	}
 
 	return winningSize
+}
+
+func calculateDirectorySize(current *Directory, cache map[*Directory]int) int {
+	totalSize := 0
+
+	for _, fileSize := range current.Files {
+		totalSize += fileSize
+	}
+
+	for _, directoryPtr := range current.Directories {
+		totalSize += calculateDirectorySize(directoryPtr, cache)
+	}
+
+	cache[current] = totalSize
+
+	return totalSize
 }
