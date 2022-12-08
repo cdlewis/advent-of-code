@@ -6,10 +6,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func GetInput(day int, useTestData bool, testData string) string {
 	if useTestData {
+		// Leading newline and random tabs have killed me every day
+
+		testData = strings.ReplaceAll(testData, "\t", "")
+
+		if testData[0] == '\n' {
+			testData = testData[1:]
+		}
+
 		return testData
 	}
 

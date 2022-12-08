@@ -8,10 +8,10 @@ func TestEight(t *testing.T) {
 	}
 
 	if Eight(true, `30373
-25512
-65332
-33549
-35390`) != 8 {
+	25512
+	65332
+	33549
+	35390`) != 8 {
 		t.Errorf("Unexpected output")
 	}
 }
