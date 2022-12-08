@@ -5,34 +5,35 @@ import (
 	"strconv"
 )
 
-func ToInt(arg interface{}) int {
-	switch arg.(type) {
+// Do digusting things to make AoC questions slightly quicker to solve
+func ToInt[U any](arg U) int {
+	switch any(arg).(type) {
 	case byte:
-		val, err := strconv.Atoi(string(arg.(byte)))
+		val, err := strconv.Atoi(string(any(arg).(byte)))
 		if err != nil {
 			panic("error converting string to int " + err.Error())
 		}
 		return val
 	case rune:
-		val, err := strconv.Atoi(string(arg.(rune)))
+		val, err := strconv.Atoi(string(any(arg).(rune)))
 		if err != nil {
 			panic("error converting string to int " + err.Error())
 		}
 		return val
 	case []byte:
-		val, err := strconv.Atoi(string(arg.([]byte)))
+		val, err := strconv.Atoi(string(any(arg).([]byte)))
 		if err != nil {
 			panic("error converting string to int " + err.Error())
 		}
 		return val
 	case string:
-		val, err := strconv.Atoi(arg.(string))
+		val, err := strconv.Atoi(any(arg).(string))
 		if err != nil {
 			panic("error converting string to int " + err.Error())
 		}
 		return val
 	default:
-		panic(fmt.Sprintf("unhandled type for int casting %T", arg))
+		panic(fmt.Sprintf("unhandled type for int casting (%T)", arg))
 	}
 }
 
