@@ -12,10 +12,7 @@ func Eight(useTest bool, testInput string) int {
 	score := 0
 	for i := 0; i < len(raw); i++ {
 		for j := 0; j < len(raw[i]); j++ {
-			newScore := isVisible(i, j, raw)
-			if newScore > score {
-				score = newScore
-			}
+			score = util.Max(score, isVisible(i, j, raw))
 		}
 	}
 
@@ -37,5 +34,5 @@ func isVisible(startI int, startJ int, grid []string) int {
 		return count
 	})
 
-	return util.Reduce(directionCounts, func(current int, next int) int { return current * next }, 1)
+	return util.Reduce(directionCounts, util.Multiply, 1)
 }
