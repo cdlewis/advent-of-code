@@ -21,6 +21,14 @@ func Pop[T any](s *[]T) T {
 	return current
 }
 
+func Reduce[T, U any](s []T, f func(U, T) U, initial U) U {
+	result := initial
+	for _, i := range s {
+		result = f(result, i)
+	}
+	return result
+}
+
 func Pops[T any](s *[]T, count int) []T {
 	if len(*s) < count {
 		panic(fmt.Sprintf("Tried to pop %v items when only %v were present on %v", count, len(*s), *s))
