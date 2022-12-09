@@ -21,3 +21,10 @@ func Min[U constraints.Ordered](x, y U) U {
 
 	return y
 }
+
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
