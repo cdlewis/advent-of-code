@@ -25,10 +25,8 @@ func main() {
 		fmt.Println("Cycle:       ", cycle)
 		fmt.Println("Instruction: ", serialisedInstructions[0], "               ")
 
-		currentRow := 0
-		currentColumn := cycle
-		currentRow = cycle / 40
-		currentColumn = cycle % (util.Max(currentRow, 1) * 40)
+		currentRow := cycle / 40
+		currentColumn := cycle % (util.Max(currentRow, 1) * 40)
 
 		// Move cursor to the current row/column (with some spacing to separate from the summary)
 		fmt.Printf("\033[%d;%dH", currentRow+5, currentColumn)
@@ -50,6 +48,6 @@ func main() {
 
 		cycle++
 
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 	}
 }
