@@ -29,6 +29,16 @@ func Reduce[T, U any](s []T, f func(U, T) U, initial U) U {
 	return result
 }
 
+func Filter[T any](s []T, f func(T) bool) []T {
+	result := []T{}
+	for _, i := range s {
+		if f(i) {
+			result = append(result, i)
+		}
+	}
+	return result
+}
+
 func Pops[T any](s *[]T, count int) []T {
 	if len(*s) < count {
 		panic(fmt.Sprintf("Tried to pop %v items when only %v were present on %v", count, len(*s), *s))
