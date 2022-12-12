@@ -11,7 +11,7 @@ func Twelve(useTest bool, testInput string) int {
 
 	end := [2]int{}
 	for idx := range graph {
-		for jdx, cell := range graph[i] {
+		for jdx, cell := range graph[idx] {
 			if cell == 'E' {
 				end = [2]int{idx, jdx}
 			}
