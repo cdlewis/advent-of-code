@@ -1,5 +1,10 @@
 package util
 
+import (
+	"regexp"
+	"strings"
+)
+
 func ValidCoordinate[U any](i int, j int, grid [][]U) bool {
 	return i >= 0 && j >= 0 && i < len(grid) && j < len(grid[0])
 }
@@ -41,4 +46,17 @@ func ShortestUnweightedPath[U any](graph [][]U, start [2]int, isEnd func(x [2]in
 	}
 
 	return -1, false
+}
+
+func ToGrid(s string) [][]int {
+	lines := strings.Split(s, "\n")
+	result := make([][]int, len(lines))
+
+	re := regexp.MustCompile(`(-?[0-9])+`)
+
+	for idx, l := range lines {
+		result[idx] = Map(re.FindAllString(l, -1), ToInt[string])
+	}
+
+	return result
 }
