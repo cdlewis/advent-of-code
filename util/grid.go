@@ -60,3 +60,28 @@ func ToGrid(s string) [][]int {
 
 	return result
 }
+
+var Directions3D = [][]int{
+	{1, 0, 0},
+	{-1, 0, 0},
+	{0, 1, 0},
+	{0, -1, 0},
+	{0, 0, 1},
+	{0, 0, -1},
+}
+
+func ValidCoordinate3D[U any](i, j, k int, space [][][]U) bool {
+	if i < 0 || i >= len(space) {
+		return false
+	}
+
+	if j < 0 || j >= len(space[i]) {
+		return false
+	}
+
+	if k < 0 || k >= len(space[i][j]) {
+		return false
+	}
+
+	return true
+}
