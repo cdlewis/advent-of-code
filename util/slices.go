@@ -39,6 +39,10 @@ func Filter[T any](s []T, f func(T) bool) []T {
 	return result
 }
 
+func ForAll[T any](s []T, f func(T) bool) bool {
+	return len(Filter(Map(s, f), func(i bool) bool { return i })) > 0
+}
+
 func Contains[T any](s []T, f func(T) bool) bool {
 	return len(Filter(Map(s, f), func(i bool) bool { return i })) > 0
 }
