@@ -1,193 +1,222 @@
-package main
+package nineteen
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/cdlewis/advent-of-code/util"
 )
 
-type Node struct {
-	Val  int
-	Next *Node
-	Prev *Node
-}
+func Nineteen() int {
+	blueprints := parseBlueprints()
 
-func (n *Node) find(needle int) *Node {
-	start := n
-	curr := n
+	score := 1
 
-	if n.Val == needle {
-		return n
-	}
-
-	curr = start.Next
-
-	for curr != start {
-		if curr.Val == needle {
-			return curr
+	for idx, b := range blueprints {
+		if idx >= 3 {
+			break
 		}
 
-		curr = curr.Next
-	}
-
-	panic("not found")
-}
-
-func (n *Node) toSlice() []int {
-	curr := n.Next
-	results := []int{n.Val}
-
-	for curr != n {
-		results = append(results, curr)
-		curr = curr.Next
-	}
-
-	return results
-}
-
-func main() {
-	raw := util.Map(strings.Split(util.GetInput(20, true, `1
-	2
-	-3
-	3
-	-2
-	0
-	4`), "\n"), util.ToInt[string])
-
-	var root *Node
-	var curr *Node
-
-	for idx, i := range raw {
-		if idx == 0 {
-			root := &Node{Val: i}
-			curr = root
-			continue
+		initialPerm := Perm{
+			robots:    Robots{OreRobot: 1},
+			materials: Materials{},
 		}
 
-		next := &Node{Val: i}
-		next.Prev = curr
-		curr.Next = next
+		q := []Perm{initialPerm}
+		steps := 0
+		maxSteps := 33
+		result := 0
 
-		curr = next
-	}
+		for len(q) > 0 && steps < maxSteps {
+			seen := map[[8]int]bool{}
+			newQ := []Perm{}
 
-	// join the start/end
-	root.Prev = curr
-	curr.Next = root
+			for len(q) > 0 {
+				curr := q[0]
+				q = q[1:]
 
-	for _, i := range raw {
-		if i == 0 {
-			continue
+				if _, ok := seen[curr.serialize()]; ok {
+					continue
+				}
+				seen[curr.serialize()] = true
+
+				// Note: robot construction shouldn't take account of new materials
+				newMaterials := curr.materials.Add(Materials{
+					Ore:      curr.robots.OreRobot,
+					Clay:     curr.robots.ClayRobot,
+					Obsidian: curr.robots.ObsidianRobot,
+					Geode:    curr.robots.GeodeRobot,
+				})
+
+				if curr.materials.Geode > result {
+					result = curr.materials.Geode
+				}
+
+				if curr.materials.Contains(b.GeodeRobot) {
+					newQ = append(newQ, Perm{
+						robots:    curr.robots.Add(Robots{GeodeRobot: 1}),
+						materials: newMaterials.Subtract(b.GeodeRobot),
+					})
+				}
+
+				if curr.materials.Contains(b.OreRobot) {
+					newQ = append(newQ, Perm{
+						robots:    curr.robots.Add(Robots{OreRobot: 1}),
+						materials: newMaterials.Subtract(b.OreRobot),
+					})
+				}
+
+				if curr.materials.Contains(b.ClayRobot) {
+					// fmt.Println("Make clay robot")
+					newQ = append(newQ, Perm{
+						robots:    curr.robots.Add(Robots{ClayRobot: 1}),
+						materials: newMaterials.Subtract(b.ClayRobot),
+					})
+				}
+
+				if curr.materials.Contains(b.ObsidianRobot) {
+					newQ = append(newQ, Perm{
+						robots:    curr.robots.Add(Robots{ObsidianRobot: 1}),
+						materials: newMaterials.Subtract(b.ObsidianRobot),
+					})
+				}
+
+				newQ = append(newQ, Perm{
+					robots:    curr.robots,
+					materials: newMaterials,
+				})
+			}
+
+			q = newQ
+
+			steps++
 		}
 
-		current := root.find(i)
+		score *= result
+	}
 
-		for j := 0; j < i; j++ {
-			// forward
-			if i > 0 {
-				iPrev := current.Prev
-				iNext := current.Next
-				iNextNext := current.Next.Next
+	return score
+}
 
-				current.Next = iNextNext
-				current.Prev = iNext
+func parseBlueprints() []Blueprint {
+	raw := util.GetInput(19, false, `Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
+Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian.`)
+	blueprints := []Blueprint{}
 
-				iNextNext.Prev = current
+	for _, row := range strings.Split(raw, "\n") {
+		b := Blueprint{}
 
-				iNext.Next = current
-				iNext.Prev = iPrev
+		for jdx, section := range strings.Split(row, ".") {
+			m := Materials{}
 
-				iPrev.Next = iNext
-			} else { // backward
-				iPrevPrev := current.Prev.Prev
-				iPrev := current.Prev
-				iNext := current.Next
+			tokens := strings.Split(section, " ")
+			for i := 1; i < len(tokens); i++ {
+				first := tokens[i-1]
+				second := tokens[i]
 
-				iPrevPrev.Next = current
+				if first == "Each" {
+					continue
+				}
 
-				current.Prev = iPrevPrev
-				current.Next = iPrev
+				if string(second) == "ore" {
+					m.Ore = util.ToInt(first)
+				}
+				if string(second) == "clay" {
+					m.Clay = util.ToInt(first)
+				}
+				if string(second) == "obsidian" {
+					m.Obsidian = util.ToInt(first)
+				}
+			}
 
-				iPrev.Prev = current
-				iPrev.Next = iNext
-
-				iNext.Prev = iPrev
+			if jdx == 0 {
+				b.OreRobot = m
+			}
+			if jdx == 1 {
+				b.ClayRobot = m
+			}
+			if jdx == 2 {
+				b.ObsidianRobot = m
+			}
+			if jdx == 3 {
+				b.GeodeRobot = m
 			}
 		}
 
-		fmt.Println(root.toSlice())
+		blueprints = append(blueprints, b)
 	}
 
-	c := root.toSlice()
-
-	zeroIdx := 0
-	for idx, i := range c {
-		if i == 0 {
-			zeroIdx = idx
-		}
-	}
-
-	one := c[(zeroIdx+1000)%(len(raw))]
-	two := c[(zeroIdx+2000)%(len(raw))]
-	three := c[(zeroIdx+3000)%(len(raw))]
-
-	fmt.Println("one", one, (zeroIdx+1000)%(len(raw)), "two", two, (zeroIdx+2000)%(len(raw)), "three", three)
-	fmt.Println(one + two + three)
+	return blueprints
 }
 
-func without(s []int, i int) []int {
-	result := []int{}
-
-	for idx, v := range s {
-		if idx == i {
-			continue
-		}
-
-		result = append(result, v)
-	}
-
-	return result
+type Perm struct {
+	robots    Robots
+	materials Materials
 }
 
-func insertAfter(s []int, toInsert, target int) []int {
-	result := []int{}
+// hack to constrain the search space
+var clamp = 16
 
-	for _, j := range s {
-		if j == target {
-			result = append(result, target, toInsert)
-		} else {
-			result = append(result, j)
-		}
+func (p Perm) serialize() [8]int {
+	return [8]int{
+		util.Min(p.robots.ClayRobot, clamp),
+		util.Min(p.robots.ObsidianRobot, clamp),
+		util.Min(p.robots.OreRobot, clamp),
+		p.robots.GeodeRobot,
+		util.Min(p.materials.Clay, clamp),
+		util.Min(p.materials.Obsidian, clamp),
+		util.Min(p.materials.Ore, clamp),
+		p.materials.Geode,
 	}
-
-	return result
 }
 
-func insertBefore(s []int, toInsert, target int) []int {
-	result := []int{}
-
-	for idx, j := range s {
-		if j == target {
-
-			if idx == 0 {
-				return append(s, toInsert)
-			}
-
-			result = append(result, toInsert, target)
-		} else {
-			result = append(result, j)
-		}
-	}
-
-	return result
+type Blueprint struct {
+	OreRobot      Materials
+	ClayRobot     Materials
+	ObsidianRobot Materials
+	GeodeRobot    Materials
 }
 
-func find(s []int, i int) int {
-	for jdx, j := range s {
-		if j == i {
-			return jdx
-		}
+type Materials struct {
+	Ore      int
+	Clay     int
+	Obsidian int
+	Geode    int
+}
+
+func (m Materials) Contains(x Materials) bool {
+	return m.Ore >= x.Ore && m.Clay >= x.Clay && m.Obsidian >= x.Obsidian
+}
+
+func (x Materials) Add(y Materials) Materials {
+	return Materials{
+		Ore:      x.Ore + y.Ore,
+		Clay:     x.Clay + y.Clay,
+		Obsidian: x.Obsidian + y.Obsidian,
+		Geode:    x.Geode + y.Geode,
 	}
-	panic("not found")
+}
+
+func (x Materials) Subtract(y Materials) Materials {
+	return Materials{
+		Ore:      x.Ore - y.Ore,
+		Clay:     x.Clay - y.Clay,
+		Obsidian: x.Obsidian - y.Obsidian,
+		Geode:    x.Geode - y.Geode,
+	}
+}
+
+type Robots struct {
+	OreRobot      int
+	ClayRobot     int
+	ObsidianRobot int
+	GeodeRobot    int
+}
+
+func (r Robots) Add(x Robots) Robots {
+	return Robots{
+		OreRobot:      r.OreRobot + x.OreRobot,
+		ClayRobot:     r.ClayRobot + x.ClayRobot,
+		ObsidianRobot: r.ObsidianRobot + x.ObsidianRobot,
+		GeodeRobot:    r.GeodeRobot + x.GeodeRobot,
+	}
 }
