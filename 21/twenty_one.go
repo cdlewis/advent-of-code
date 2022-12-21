@@ -51,31 +51,21 @@ func TwentyOne() int {
 		}
 	}
 
-	// Lazy 'binary' search for a starting point somewhat close to the result
+	lower := 0
+	upper := math.MaxInt / 100
 
-	i := 0
-	skipAmount := math.MaxInt / 100
-	for skipAmount > 1 {
-		graph["humn"].Value = i + skipAmount
-
-		if _, diff, _ := solve("root", graph); diff > 0 {
-			i = i + skipAmount
-			continue
-		}
-
-		graph["humn"].Value = i - skipAmount
-		skipAmount /= 2
-	}
-
-	// Brute force the remainder
-
-	for ; i < math.MaxInt; i++ {
-		graph["humn"].Value = i
+	for lower < upper {
+		mid := (lower + upper) / 2
+		graph["humn"].Value = mid
 
 		_, diff, _ := solve("root", graph)
 
-		if diff == 0 {
-			return i
+		if diff > 0 {
+			lower = mid + 1
+		} else if diff < 0 {
+			upper = mid - 1
+		} else {
+			return mid
 		}
 	}
 
