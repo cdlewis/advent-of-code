@@ -1,6 +1,8 @@
 package util
 
 import (
+	"fmt"
+	"math"
 	"regexp"
 	"strings"
 )
@@ -10,6 +12,29 @@ func ValidCoordinate[U any](i int, j int, grid [][]U) bool {
 }
 
 var Directions = [][]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+
+var DirectionsDiagonal = [][2]int{
+	{-1, -1}, {-1, 0}, {-1, 1},
+	{1, -1}, {1, 0}, {1, 1},
+	{1, -1}, {0, -1}, {-1, -1},
+	{-1, 1}, {0, 1}, {-1, 1},
+}
+
+var DirectionsDiagonalGrouped = [][][2]int{
+	{{-1, -1}, {-1, 0}, {-1, 1}},
+	{{1, -1}, {1, 0}, {1, 1}},
+	{{1, -1}, {0, -1}, {-1, -1}},
+	{{-1, 1}, {0, 1}, {1, 1}},
+}
+
+var Directions3D = [][]int{
+	{1, 0, 0},
+	{-1, 0, 0},
+	{0, 1, 0},
+	{0, -1, 0},
+	{0, 0, 1},
+	{0, 0, -1},
+}
 
 func ShortestUnweightedPath[U any](graph [][]U, start [2]int, isEnd func(x [2]int) bool, validatePath func(x [2]int, y [2]int) bool) (int, bool) {
 	steps := 0
@@ -61,15 +86,6 @@ func ToGrid(s string) [][]int {
 	return result
 }
 
-var Directions3D = [][]int{
-	{1, 0, 0},
-	{-1, 0, 0},
-	{0, 1, 0},
-	{0, -1, 0},
-	{0, 0, 1},
-	{0, 0, -1},
-}
-
 func ValidCoordinate3D[U any](i, j, k int, space [][][]U) bool {
 	if i < 0 || i >= len(space) {
 		return false
@@ -84,4 +100,36 @@ func ValidCoordinate3D[U any](i, j, k int, space [][][]U) bool {
 	}
 
 	return true
+}
+
+func AddPoints(x, y [2]int) [2]int {
+	x[0] += y[0]
+	x[1] += y[1]
+	return x
+}
+
+func BoundingBox[U any](graph map[[2]int]U) (int, int, int, int) {
+	minX, minY, maxX, maxY := math.MaxInt, math.MaxInt, math.MinInt, math.MinInt
+	for pos := range graph {
+		minY = Min(minY, pos[0])
+		maxY = Max(maxY, pos[0])
+		minX = Min(minX, pos[1])
+		maxX = Max(maxX, pos[1])
+	}
+	return minX, minY, maxX, maxY
+}
+
+func Print[U any](graph map[[2]int]U) {
+	minX, minY, maxX, maxY := BoundingBox(graph)
+
+	for i := minY; i <= maxY; i++ {
+		for j := minX; j <= maxX; j++ {
+			if _, ok := graph[[2]int{i, j}]; ok {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Print("\n")
+	}
 }

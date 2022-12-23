@@ -102,7 +102,7 @@ func parseInput() ([]string, []string) {
 
 	for idx := range raw {
 		if len(raw[idx]) < maxLength {
-			raw[idx] = util.PadRight(raw[idx], maxLength, " ")
+			raw[idx] = util.PadRight(raw[idx], maxLength, ' ')
 		}
 	}
 

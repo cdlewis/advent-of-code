@@ -115,3 +115,7 @@ func IntersectionString(strings ...string) string {
 	result := Intersection(byteArrays...)
 	return string(result)
 }
+
+func RotateRight[U any](s []U) []U {
+	return append(s[1:], s[0])
+}
