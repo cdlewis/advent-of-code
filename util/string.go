@@ -19,3 +19,12 @@ func SplitStringOn(in string, cutset []string) []string {
 	}
 	return parts
 }
+
+func PadRight(str string, lenght int, pad string) string {
+	for {
+		str += pad
+		if len(str) > lenght {
+			return str[0:lenght]
+		}
+	}
+}

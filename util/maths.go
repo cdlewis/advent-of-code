@@ -28,3 +28,14 @@ func Abs(x int) int {
 	}
 	return x
 }
+
+// https://github.com/golang/go/issues/448
+func Mod(d, m int) int {
+	res := d % m
+
+	if (res < 0 && m > 0) || (res > 0 && m < 0) {
+		return res + m
+	}
+	
+	return res
+}
