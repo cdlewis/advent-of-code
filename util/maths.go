@@ -36,6 +36,20 @@ func Mod(d, m int) int {
 	if (res < 0 && m > 0) || (res > 0 && m < 0) {
 		return res + m
 	}
-	
+
 	return res
+}
+
+func Pow(x, n int) int {
+	if n == 0 {
+		return 1
+	}
+	if n == 1 {
+		return x
+	}
+	y := Pow(x, n/2)
+	if n%2 == 0 {
+		return y * y
+	}
+	return x * y * y
 }
