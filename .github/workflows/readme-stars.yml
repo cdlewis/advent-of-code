@@ -1,7 +1,5 @@
 name: README Stars
 on:
-  schedule:
-    - cron: "51 */4 * * *"  # Every 4 hours
   workflow_dispatch:
 
 jobs:
