@@ -1,4 +1,4 @@
-module github.com/cdlewis/advent-of-code/2024
+module github.com/cdlewis/advent-of-code
 
 go 1.23
 
