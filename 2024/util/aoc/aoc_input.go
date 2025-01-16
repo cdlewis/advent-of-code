@@ -22,7 +22,7 @@ func GetInput(day int, useTestData bool, testData string) string {
 		return testData
 	}
 
-	sessionId, err := os.ReadFile("../session_id")
+	sessionId, err := os.ReadFile("../../session_id")
 
 	if err != nil {
 		panic(err)
