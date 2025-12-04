@@ -1,5 +1,6 @@
-import aoc.*
+package Day1
 
+import aoc.*
 
 @main def run() =
   val pattern = "([LR])([0-9]+)".r

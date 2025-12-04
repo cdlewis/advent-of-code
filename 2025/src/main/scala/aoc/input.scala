@@ -1,3 +1,5 @@
+package aoc
+
 import java.net.URI
 import java.net.http.{HttpClient, HttpRequest, HttpResponse}
 import java.nio.file.{Files, Paths, Path}

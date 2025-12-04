@@ -1,6 +1,7 @@
 package aoc
 
 import scala.util.matching.Regex
+import scala.math.BigInt
 
 trait FromString[A]:
   def parse(s: String): Option[A]
@@ -10,8 +11,10 @@ object FromString:
     def parse(s: String): Option[String] = Some(s)
 
   given FromString[Int] with
-    def parse(s: String): Option[Int] =
-      s.toIntOption
+    def parse(s: String): Option[Int] = s.toIntOption
+
+    given FromString[BigInt] with
+      def parse(s: String): Option[BigInt] = Some(BigInt(s))
 
 object Groups:
   def unapply[A: FromString, B: FromString](m: Regex.Match): Option[(A, B)] =
